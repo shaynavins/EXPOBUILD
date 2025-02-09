@@ -1,10 +1,11 @@
 
 import { View, Text, StyleSheet, TextInput, ActivityIndicator, Button, KeyboardAvoidingView } from 'react-native'
 import React, { useState, createContext, useContext } from 'react'
-import { FIREBASE_AUTH } from '@/FirebaseConfig';
+import { db, FIREBASE_AUTH } from '@/FirebaseConfig';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, getAuth } from 'firebase/auth';
 import { firebase } from '@react-native-firebase/auth';
-
+import { addDoc, collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 
 
 
@@ -13,7 +14,7 @@ const Login = () => {
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const auth = FIREBASE_AUTH;
-   
+
 const signIn = async() => {
     setLoading(true);
     try{
@@ -60,7 +61,10 @@ const signUp = async() => {
         </View>
 
     );
+
+
 };
+
 
 export default Login;
 
