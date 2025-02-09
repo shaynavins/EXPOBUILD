@@ -60,7 +60,7 @@ const List = ({ navigation }: RouterProps) => {
 
 export default List; */
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection, doc, documentId, getFirestore, setDoc } from 'firebase/firestore';
@@ -115,23 +115,41 @@ const List = ({ navigation }: RouterProps) => {
   };
   
   const addQuestion = async () => {
+
     try {
+      
       const auth = getAuth();
       const currentUser = auth.currentUser;
-  
       if (currentUser) {
         const userId = currentUser.uid;
         console.log('Current User ID:', userId);
   
+        await addDoc(collection(db, "questions"), {
+          question: question,  // User's question
+          userId: userId,      // User ID of the poster
+          createdAt: new Date(),
+        });
+  
+        console.log('Question added successfully!');
+        onQuestion(''); // Clear input after posting
+      } else {
+        console.log('No user is logged in');
+      }
+      /* if (currentUser) {
+        const userId = currentUser.uid;
+        console.log('Current User ID:', userId);
+        const user = auth.currentUser;
+
         // Move setDoc inside this block to ensure userId is defined
-        await setDoc(doc(db, 'users', userId), {
+        await addDoc(collection(db, "users", user.uid, "questions"), {
           question: question,  // Ensure 'question' is defined in your state
           createdAt: new Date(),
         });
         console.log('Question added successfully!');
       } else {
         console.log('No user is logged in');
-      }
+      } */
+      onQuestion('');
     } catch (error) {
       console.error('Error adding question:', error);
     }
@@ -140,7 +158,7 @@ const List = ({ navigation }: RouterProps) => {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button onPress={() => navigation.navigate('details')} title="Open Details" />
+      <Button onPress={() => navigation.navigate('deets')} title="Open Details" />
       <Button onPress={() => FIREBASE_AUTH.signOut()} title="Logout" />
       <Text>Welcome to the Home Screen!</Text>
       {userId && <Text>User ID: {userId}</Text>}

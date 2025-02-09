@@ -20,7 +20,6 @@ function InsideLayout() {
     <InsideStack.Navigator>
       <InsideStack.Screen name='my doubts' component={List} />
       <InsideStack.Screen name='deets' component={Details} />
-
     </InsideStack.Navigator>
   );
 }
